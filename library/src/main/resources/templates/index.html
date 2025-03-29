@@ -3,65 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <title>Library System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        form {
+            margin-bottom: 25px;
+        }
+
+        input, select, button {
+            margin: 5px;
+            padding: 8px 10px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .delete-button {
+            background-color: #e74c3c;
+        }
+
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .form-title {
+            margin-top: 40px;
+            color: #34495e;
+        }
+
+        .section-divider {
+            border-top: 2px solid #ccc;
+            margin: 30px 0;
+        }
+
+        .right-align {
+            text-align: right;
+        }
+    </style>
 </head>
-<body style="font-family: Arial; padding: 20px;">
-<h1>📚 Library System</h1>
+<body>
+<div class="container">
+    <h1>📚 Library System</h1>
 
-<form th:action="@{/add}" method="post">
-    <h3>Add / Update Book</h3>
-    <input type="text" name="id" placeholder="Book ID" required />
-    <input type="text" name="title" placeholder="Title" required />
-    <input type="text" name="author" placeholder="Author" required />
-    <input type="text" name="genre" placeholder="Genre" />
-    <select name="availabilityStatus">
-        <option>Available</option>
-        <option>Checked Out</option>
-    </select>
-    <button type="submit">Add Book</button>
-</form>
+    <div th:if="${error}" class="error">
+        <p th:text="${error}"></p>
+    </div>
 
-<form th:action="@{/update}" method="post">
-    <h3>Update Book</h3>
-    <input type="text" name="id" placeholder="Book ID" required />
-    <input type="text" name="title" placeholder="New Title" />
-    <input type="text" name="author" placeholder="New Author" />
-    <input type="text" name="genre" placeholder="New Genre" />
-    <select name="availabilityStatus">
-        <option>Available</option>
-        <option>Checked Out</option>
-    </select>
-    <button type="submit">Update</button>
-</form>
+    <h2>📖 Available Books</h2>
 
-<form th:action="@{/delete}" method="post">
-    <h3>Delete Book</h3>
-    <input type="text" name="id" placeholder="Book ID" required />
-    <button type="submit">Delete</button>
-</form>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+        <!-- Show All Books button -->
+        <form th:action="@{/}" method="get">
+            <button type="submit">Show All</button>
+        </form>
+    <!-- Search bar -->
+      <form th:action="@{/search}" method="post" class="right-align">
+        <input type="text" name="searchTitle" placeholder="Search by Title" required />
+        <button type="submit">Search</button>
+      </form>
+    </div>
 
-<form th:action="@{/search}" method="post">
-    <h3>Search by Title</h3>
-    <input type="text" name="searchTitle" placeholder="Title" />
-    <button type="submit">Search</button>
-</form>
+    <!-- Book Table -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th><th>Title</th><th>Author</th><th>Genre</th><th>Status</th><th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.bookId}">1</td>
+            <td th:text="${book.title}">Sample</td>
+            <td th:text="${book.author}">Author</td>
+            <td th:text="${book.genre}">Genre</td>
+            <td th:text="${book.availabilityStatus}">Available</td>
+            <td>
+                <form th:action="@{/delete}" method="post" style="margin: 0;">
+                    <input type="hidden" name="id" th:value="${book.bookId}" />
+                    <button type="submit" class="delete-button">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-<h2>📖 Book Catalog</h2>
-<div th:if="${error}" style="color: red;">Error: <span th:text="${error}"></span></div>
-<table border="1" cellpadding="5" style="margin-top: 10px;">
-    <tr>
-        <th>ID</th><th>Title</th><th>Author</th><th>Genre</th><th>Status</th>
-    </tr>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}">ID</td>
-        <td th:text="${book.title}">Title</td>
-        <td th:text="${book.author}">Author</td>
-        <td th:text="${book.genre}">Genre</td>
-        <td th:text="${book.availabilityStatus}">Status</td>
-    </tr>
-</table>
+    <div class="section-divider"></div>
 
-<h3>⚠️ Exit System</h3>
-<button onclick="shutdownApp()">Exit System</button>
+    <!-- Add Book -->
+    <h2 class="form-title">➕ Add Book</h2>
+    <form th:action="@{/add}" method="post">
+        <input type="text" name="bookId" placeholder="Book ID" required />
+        <input type="text" name="title" placeholder="Title" required />
+        <input type="text" name="author" placeholder="Author" required />
+        <input type="text" name="genre" placeholder="Genre" />
+        <select name="availabilityStatus">
+            <option>Available</option>
+            <option>Checked Out</option>
+        </select>
+        <button type="submit">Add</button>
+    </form>
+
+    <!-- Update Book -->
+    <h2 class="form-title">✏️ Update Book</h2>
+    <form th:action="@{/update}" method="post">
+        <input type="text" name="bookId" placeholder="Book ID to Update" required />
+        <input type="text" name="title" placeholder="New Title" />
+        <input type="text" name="author" placeholder="New Author" />
+        <input type="text" name="genre" placeholder="New Genre" />
+        <select name="availabilityStatus">
+            <option>Available</option>
+            <option>Checked Out</option>
+        </select>
+        <button type="submit">Update</button>
+    </form>
+
+    <div class="section-divider"></div>
+
+    <!-- Exit System -->
+    <h2 class="form-title">⚠️ Exit System</h2>
+    <button onclick="shutdownApp()">Exit System</button>
+</div>
 
 <script>
     function shutdownApp() {
@@ -72,7 +185,6 @@
             .then(response => response.text())
             .then(message => {
                 alert(message);
-                // Optional: Disable interface after shutdown
             })
             .catch(error => {
                 alert("Shutdown failed: " + error);
@@ -80,6 +192,5 @@
         }
     }
 </script>
-
 </body>
 </html>

@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.*;
 public class SystemController {
 
 
+    // used to shut down the beans. so, application will shut down
     private final ApplicationContext context;
 
+
+    //constructor
     public SystemController(ApplicationContext context) {
         this.context = context;
     }
 
+    // to exit the application
     @PostMapping("/exit")
     public String exitSystem() {
         if (context instanceof ConfigurableApplicationContext) {

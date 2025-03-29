@@ -6,19 +6,22 @@ import com.example.library.exception.BookIdAlreadyExistsException;
 import com.example.library.exception.BookNotFoundException;
 import com.example.library.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/book")
+
+//Used controller annotation for Thymeleaf
+@Controller
 public class BookController {
 
     @Autowired
-    private BookService bookService;
+    private BookService bookService;         // injected the service class
 
 
+    //  home page
     @GetMapping("/")
     public String homePage(Model model) {
         model.addAttribute("book", new BookDetails());
@@ -26,6 +29,7 @@ public class BookController {
         return "index";
     }
 
+    //to add  book
     @PostMapping("/add")
     public String addBook(@ModelAttribute BookDetails book, Model model) {
         try {
@@ -38,6 +42,8 @@ public class BookController {
         return "index";
     }
 
+
+    // tp update a book
     @PostMapping("/update")
     public String updateBook(@ModelAttribute BookDetails book, Model model) {
         try {
@@ -50,6 +56,8 @@ public class BookController {
         return "index";
     }
 
+
+    //to delete a book
     @PostMapping("/delete")
     public String deleteBook(@RequestParam String id, Model model) {
         try {
@@ -62,6 +70,7 @@ public class BookController {
         return "index";
     }
 
+    //to search a book
     @PostMapping("/search")
     public String searchBook(@RequestParam String searchTitle, Model model) {
         List<BookDetails> results = bookService.searchBooksByTitle(searchTitle);
