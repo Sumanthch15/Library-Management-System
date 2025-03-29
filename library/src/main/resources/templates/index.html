@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Library System</title>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+<h1>📚 Library System</h1>
+
+<form th:action="@{/add}" method="post">
+    <h3>Add / Update Book</h3>
+    <input type="text" name="id" placeholder="Book ID" required />
+    <input type="text" name="title" placeholder="Title" required />
+    <input type="text" name="author" placeholder="Author" required />
+    <input type="text" name="genre" placeholder="Genre" />
+    <select name="availabilityStatus">
+        <option>Available</option>
+        <option>Checked Out</option>
+    </select>
+    <button type="submit">Add Book</button>
+</form>
+
+<form th:action="@{/update}" method="post">
+    <h3>Update Book</h3>
+    <input type="text" name="id" placeholder="Book ID" required />
+    <input type="text" name="title" placeholder="New Title" />
+    <input type="text" name="author" placeholder="New Author" />
+    <input type="text" name="genre" placeholder="New Genre" />
+    <select name="availabilityStatus">
+        <option>Available</option>
+        <option>Checked Out</option>
+    </select>
+    <button type="submit">Update</button>
+</form>
+
+<form th:action="@{/delete}" method="post">
+    <h3>Delete Book</h3>
+    <input type="text" name="id" placeholder="Book ID" required />
+    <button type="submit">Delete</button>
+</form>
+
+<form th:action="@{/search}" method="post">
+    <h3>Search by Title</h3>
+    <input type="text" name="searchTitle" placeholder="Title" />
+    <button type="submit">Search</button>
+</form>
+
+<h2>📖 Book Catalog</h2>
+<div th:if="${error}" style="color: red;">Error: <span th:text="${error}"></span></div>
+<table border="1" cellpadding="5" style="margin-top: 10px;">
+    <tr>
+        <th>ID</th><th>Title</th><th>Author</th><th>Genre</th><th>Status</th>
+    </tr>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}">ID</td>
+        <td th:text="${book.title}">Title</td>
+        <td th:text="${book.author}">Author</td>
+        <td th:text="${book.genre}">Genre</td>
+        <td th:text="${book.availabilityStatus}">Status</td>
+    </tr>
+</table>
+
+<h3>⚠️ Exit System</h3>
+<button onclick="shutdownApp()">Exit System</button>
+
+<script>
+    function shutdownApp() {
+        if (confirm("Are you sure you want to shut down the application?")) {
+            fetch('/system/exit', {
+                method: 'POST'
+            })
+            .then(response => response.text())
+            .then(message => {
+                alert(message);
+                // Optional: Disable interface after shutdown
+            })
+            .catch(error => {
+                alert("Shutdown failed: " + error);
+            });
+        }
+    }
+</script>
+
+</body>
+</html>
