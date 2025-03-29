@@ -1,14 +1,18 @@
-# Use an official OpenJDK image
-FROM openjdk:17-jdk-slim
+# === STAGE 1: Build the application ===
+FROM maven:3.8.6-eclipse-temurin-17 AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Create app directory
+# === STAGE 2: Run the application ===
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-# Copy the target JAR file (replace with your real JAR name)
-COPY target/library-0.0.1-SNAPSHOT.jar app.jar
+# Copy JAR from build stage
+COPY --from=build /app/target/*.jar app.jar
 
-# Expose port 8080
+# Expose the port
 EXPOSE 8080
 
-# Command to run the JAR
+# Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
