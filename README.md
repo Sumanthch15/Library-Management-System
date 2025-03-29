@@ -14,7 +14,7 @@ How to Run the Library Management System
 
 1. Clone the Repository
 
-   git clone https://github.com/your-username/Library_Management_System.git
+   git clone https://github.com/Sumanthch15/Library-Management-System.git
    cd Library_Management_System/library
 
 2. Build the Project
