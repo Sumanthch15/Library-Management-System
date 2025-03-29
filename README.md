@@ -1,11 +1,12 @@
-## Library Management System
+# Library Management System
 
 Deployment link :  https://library-management-system-bwnc.onrender.com
 
 
+This is a Spring Boot application that manages a book catalog with features like add, update, search, delete, and view all books.
+
 How to Run the Library Management System
 
-This is a Spring Boot application that manages a book catalog with features like add, update, search, delete, and view all books.
 
 ---
 
